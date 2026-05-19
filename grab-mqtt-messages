@@ -53,9 +53,19 @@ sub received
             #push @output, "aprtpower=" . $json->{"params"}->{"switch:0"}->{"aprtpower"};
             if ( $json->{"params"}->{"switch:0"}->{"aenergy"} ) {
                 push @output, "aenergy_total=" . $json->{"params"}->{"switch:0"}->{"aenergy"}->{"total"};
+                my $arrayindex = 0;
+                foreach ( @{ $json->{"params"}->{"switch:0"}->{"aenergy"}->{"by_minute"} } ) {
+                    push @output, "aenergy_by_minute_$arrayindex=$_";
+                    $arrayindex++;
+                }
             }
             if ( $json->{"params"}->{"switch:0"}->{"ret_aenergy"} ) {
                 push @output, "ret_aenergy_total=" . $json->{"params"}->{"switch:0"}->{"ret_aenergy"}->{"total"};
+                my $arrayindex = 0;
+                foreach ( @{ $json->{"params"}->{"switch:0"}->{"ret_aenergy"}->{"by_minute"} } ) {
+                    push @output, "ret_aenergy_by_minute_$arrayindex=$_";
+                    $arrayindex++;
+                }
             }
 
             print Dumper \@output;
