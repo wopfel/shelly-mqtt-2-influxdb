@@ -79,6 +79,4 @@ sub received
     }
 
     # Incoming message on topic shellypro1pm-xxxxxxxxxxxx/events/rpc is: {"src":"shellypro1pm-xxxxxxxxxxxx","dst":"shellypro1pm-xxxxxxxxxxxx/events","method":"NotifyStatus","params":{"ts":1779189000.00,"switch:0":{"aenergy":{"by_minute":[35.303,34.389,35.947],"minute_ts":1779189000,"total":5638.923},"apower":1.8,"aprtpower":1.8,"current":0.051,"freq":50.01,"pf":0.2,"ret_aenergy":{"by_minute":[0.000,0.000,0.000],"minute_ts":1779189000,"total":0.000},"voltage":234.7}}}
-
-    #TODO: JSON parsing
 }
