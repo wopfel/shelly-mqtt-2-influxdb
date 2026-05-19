@@ -38,14 +38,25 @@ sub received
 
         if ( $json->{"method"} eq "NotifyStatus"  and  $json->{"params"}->{"switch:0"} ) {
 
-            push @output, "apower=" . $json->{"params"}->{"switch:0"}->{"apower"};
-            push @output, "freq=" . $json->{"params"}->{"switch:0"}->{"freq"};
-            push @output, "current=" . $json->{"params"}->{"switch:0"}->{"current"};
-            push @output, "voltage=" . $json->{"params"}->{"switch:0"}->{"voltage"};
-            push @output, "pf=" . $json->{"params"}->{"switch:0"}->{"pf"};
-            push @output, "aprtpower=" . $json->{"params"}->{"switch:0"}->{"aprtpower"};
-            push @output, "aenergy_total=" . $json->{"params"}->{"switch:0"}->{"aenergy"}->{"total"};
-            push @output, "ret_aenergy_total=" . $json->{"params"}->{"switch:0"}->{"ret_aenergy"}->{"total"};
+            foreach ( keys %{ $json->{"params"}->{"switch:0"} } ) {
+                print ref $json->{"params"}->{"switch:0"}->{ $_ };
+                # No reference?
+                if ( ! ref $json->{"params"}->{"switch:0"}->{ $_ } ) {
+                    push @output, "$_=" . $json->{"params"}->{"switch:0"}->{$_};
+                }
+            }
+            #push @output, "apower=" . $json->{"params"}->{"switch:0"}->{"apower"};
+            #push @output, "freq=" . $json->{"params"}->{"switch:0"}->{"freq"};
+            #push @output, "current=" . $json->{"params"}->{"switch:0"}->{"current"};
+            #push @output, "voltage=" . $json->{"params"}->{"switch:0"}->{"voltage"};
+            #push @output, "pf=" . $json->{"params"}->{"switch:0"}->{"pf"};
+            #push @output, "aprtpower=" . $json->{"params"}->{"switch:0"}->{"aprtpower"};
+            if ( $json->{"params"}->{"switch:0"}->{"aenergy"} ) {
+                push @output, "aenergy_total=" . $json->{"params"}->{"switch:0"}->{"aenergy"}->{"total"};
+            }
+            if ( $json->{"params"}->{"switch:0"}->{"ret_aenergy"} ) {
+                push @output, "ret_aenergy_total=" . $json->{"params"}->{"switch:0"}->{"ret_aenergy"}->{"total"};
+            }
 
             print Dumper \@output;
 
