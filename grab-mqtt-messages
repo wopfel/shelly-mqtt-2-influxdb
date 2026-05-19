@@ -69,9 +69,11 @@ sub received
             my $outstring = "shellymqtt,$metricstring $perfstring $timestamp";
 
             print "$outstring\n";
-            #open OUTFILE, ">", $filename;
-            #print OUTFILE $outstring;
-            #close OUTFILE;
+
+            # Write string to file
+            open OUTFILE, ">", "./spool/$filename"  or  die;
+            print OUTFILE "$outstring\n";
+            close OUTFILE;
         }
 
     }
