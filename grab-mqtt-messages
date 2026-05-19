@@ -60,7 +60,8 @@ sub received
 
             print Dumper \@output;
 
-            my $filename = "data-$shelly_serial." . (scalar time()); #TODO random
+            # Build filename using shelly's serial number, a random number (just in case), and the current timestamp
+            my $filename = "data-$shelly_serial-" . int(rand(100_000)) . "." . (scalar time());
 
             my $timestamp = int $json->{"params"}->{"ts"} // time;
             my $perfstring = join ",", @output;
