@@ -51,9 +51,10 @@ sub received
 
             my $filename = "data-$shelly_serial." . (scalar time()); #TODO random
 
+            my $timestamp = int $json->{"params"}->{"ts"} // time;
             my $perfstring = join ",", @output;
             my $metricstring = "model=$shelly_model,serial=$shelly_serial";
-            my $outstring = "shellymqtt,$metricstring $perfstring";
+            my $outstring = "shellymqtt,$metricstring $perfstring $timestamp";
 
             print "$outstring\n";
             #open OUTFILE, ">", $filename;
