@@ -51,6 +51,11 @@ sub received
 
             my $filename = "data-$shelly_serial." . (scalar time()); #TODO random
 
+            my $perfstring = join ",", @output;
+            my $metricstring = "model=$shelly_model,serial=$shelly_serial";
+            my $outstring = "shellymqtt,$metricstring $perfstring";
+
+            print "$outstring\n";
             #open OUTFILE, ">", $filename;
             #print OUTFILE $outstring;
             #close OUTFILE;
