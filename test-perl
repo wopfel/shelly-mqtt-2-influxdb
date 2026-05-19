@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Net::MQTT::Simple;
+
+# Establish connection to MQTT broker
+my $mqtt = Net::MQTT::Simple->new('mosquitto.lan:1883');
+
+# Subscribe to topics
+#$mqtt->subscribe("shellypro1pm-xxxxxxxxxxxx/status/#", \&received);
+$mqtt->subscribe("shellypro1pm-xxxxxxxxxxxx/#", \&received);
+$mqtt->subscribe("shellypro1pm-xxxxxxxxxxxx/#", \&received);
+
+# Run loop
+$mqtt->run();
+
+# Disconnect (but when?)
+$mqtt->disconnect();
+
+# Receive message
+sub received
+{
+    my ($topic, $message) = @_;
+    print STDERR "Incoming message. Topic: $topic. Payload: $message\n";
+
+    # Topic: shellypro1pm-xxxxxxxxxxxx/events/rpc
+    # Payload: {"src":"shellypro1pm-xxxxxxxxxxxx","dst":"shellypro1pm-xxxxxxxxxxxx/events","method":"NotifyStatus","params":{"ts":1779189000.00,"switch:0":{"aenergy":{"by_minute":[35.303,34.389,35.947],"minute_ts":1779189000,"total":5638.923},"apower":1.8,"aprtpower":1.8,"current":0.051,"freq":50.01,"pf":0.2,"ret_aenergy":{"by_minute":[0.000,0.000,0.000],"minute_ts":1779189000,"total":0.000},"voltage":234.7}}}
+
+    #TODO: JSON parsing
+}
