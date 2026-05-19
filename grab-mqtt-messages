@@ -52,6 +52,8 @@ sub received
             my $filename = "data-$shelly_serial." . (scalar time()); #TODO random
 
             #open OUTFILE, ">", $filename;
+            #print OUTFILE $outstring;
+            #close OUTFILE;
         }
 
     }
