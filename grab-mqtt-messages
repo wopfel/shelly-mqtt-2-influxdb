@@ -1,0 +1,61 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Net::MQTT::Simple;
+use JSON qw( decode_json );
+use Data::Dumper;
+
+# Establish connection to MQTT broker
+my $mqtt = Net::MQTT::Simple->new('mosquitto.lan:1883');
+
+# Subscribe to topics
+#$mqtt->subscribe("shellypro1pm-xxxxxxxxxxxx/status/#", \&received);
+$mqtt->subscribe("shellypro1pm-xxxxxxxxxxxx/#", \&received);
+$mqtt->subscribe("shellypro1pm-xxxxxxxxxxxx/#", \&received);
+
+# Run loop
+$mqtt->run();
+
+# Disconnect (but when?)
+$mqtt->disconnect();
+
+# Receive message
+sub received
+{
+    my ($topic, $payload) = @_;
+
+    if ( $topic =~ m{^shelly(.*?)-(............)/events/rpc$} ) {
+        my $shelly_model = $1;
+	my $shelly_serial = $2;
+
+	my $json = decode_json( $payload );
+
+	print Dumper $json;
+
+	my @output;
+
+	if ( $json->{"params"}->{"switch:0"} ) {
+
+	    push @output, "apower=" . $json->{"params"}->{"switch:0"}->{"apower"};
+	    push @output, "freq=" . $json->{"params"}->{"switch:0"}->{"freq"};
+	    push @output, "current=" . $json->{"params"}->{"switch:0"}->{"current"};
+	    push @output, "voltage=" . $json->{"params"}->{"switch:0"}->{"voltage"};
+	    push @output, "pf=" . $json->{"params"}->{"switch:0"}->{"pf"};
+	    push @output, "aprtpower=" . $json->{"params"}->{"switch:0"}->{"aprtpower"};
+	    push @output, "aenergy_total=" . $json->{"params"}->{"switch:0"}->{"aenergy"}->{"total"};
+	    push @output, "ret_aenergy_total=" . $json->{"params"}->{"switch:0"}->{"ret_aenergy"}->{"total"};
+
+	    print Dumper \@output;
+
+	    #my $filename = "data-"; #TODO random + serial;
+	    #open OUTFILE, ">", $filename;
+        }
+
+    }
+
+    # Incoming message on topic shellypro1pm-xxxxxxxxxxxx/events/rpc is: {"src":"shellypro1pm-xxxxxxxxxxxx","dst":"shellypro1pm-xxxxxxxxxxxx/events","method":"NotifyStatus","params":{"ts":1779189000.00,"switch:0":{"aenergy":{"by_minute":[35.303,34.389,35.947],"minute_ts":1779189000,"total":5638.923},"apower":1.8,"aprtpower":1.8,"current":0.051,"freq":50.01,"pf":0.2,"ret_aenergy":{"by_minute":[0.000,0.000,0.000],"minute_ts":1779189000,"total":0.000},"voltage":234.7}}}
+
+    #TODO: JSON parsing
+}
