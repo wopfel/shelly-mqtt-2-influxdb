@@ -49,7 +49,8 @@ sub received
 
             print Dumper \@output;
 
-            #my $filename = "data-"; #TODO random + serial;
+            my $filename = "data-$shelly_serial." . (scalar time()); #TODO random
+
             #open OUTFILE, ">", $filename;
         }
 
