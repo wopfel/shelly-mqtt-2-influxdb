@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use LWP::UserAgent;
+use Data::Dumper;
 
 
 open INFILE, "<", "./spool/data-fcb467a6a0c4-97850.1779247260";
@@ -36,3 +37,7 @@ if ( $res->is_success ) {
 else {
     print $res->status_line, "\n";
 }
+
+print "Code: " . $res->code . "\n";
+
+#print Dumper \$res;
