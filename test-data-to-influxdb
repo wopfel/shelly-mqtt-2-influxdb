@@ -16,11 +16,6 @@ print $data;
 my $url = "http://localhost:8086/api/v2/write?org=none&bucket=mqttdata&precision=s";
 my $token = "o7RFr6VJNEcAc0TFikNs9ke9KXkXmdC3oBc6oeMYmRhsoCmnRmiWPzBf7-dBTVLS__UoIYjmNEoAsyYUSXycdw==";
 
-#   --header "Authorization: Token $INFLUX_TOKEN" \
-#   --header "Content-Type: text/plain; charset=utf-8" \
-#   --header "Accept: application/json" \
-#   --data-binary "
-
 
 my $ua = LWP::UserAgent->new;
 $ua->agent( "shelly-mqtt-to-influxdb" );
