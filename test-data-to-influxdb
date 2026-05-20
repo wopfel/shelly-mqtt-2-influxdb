@@ -31,13 +31,15 @@ $req->content( $data );
 
 my $res = $ua->request( $req );
 
-if ( $res->is_success ) {
-    print $res->content;
+if ( $res->is_success and $res->code == 204 ) {
+    # Everything is fine, status code 204 is expected
+    #print $res->content;
+    #TODO: move file to completed folder
 }
 else {
     print $res->status_line, "\n";
 }
 
-print "Code: " . $res->code . "\n";
+#print "Code: " . $res->code . "\n";
 
 #print Dumper \$res;
