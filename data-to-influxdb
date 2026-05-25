@@ -20,9 +20,16 @@ $ua->agent( "shelly-mqtt-to-influxdb" );
 
 opendir DIR, "./spool"  or  die;
 
+my $filecount = 0;
+
 while ( readdir DIR ) {
     # Sample filename: data-0123456789ab-98765.1777777777
     process_file $_  if  /^data-[a-f0-9]+-\d+.\d+$/;
+    $filecount++;
+
+    if ( $filecount % 500 == 0 ) {
+        print "Processed $filecount files.\n";
+    }
 }
 
 
@@ -34,7 +41,7 @@ sub process_file($) {
     my $data = <INFILE>;
     close INFILE;
 
-    print $data;
+    #print $data;
 
     my $req = HTTP::Request->new( POST => $url );
     $req->content_type( 'text/plain; charset=utf-8' );
@@ -55,7 +62,7 @@ sub process_file($) {
         print $res->status_line, "\n";
     }
 
-    print "Code: " . $res->code . "\n";
+    #print "Code: " . $res->code . "\n";
 
     #print Dumper \$res;
 
