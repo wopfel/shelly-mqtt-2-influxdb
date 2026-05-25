@@ -59,7 +59,7 @@ sub process_file($) {
         move "./spool/$filename", "./completed/."  or  die "$!";
     }
     else {
-        print $res->status_line, "\n";
+        print $res->status_line, ", file: $filename.\n";
     }
 
     #print "Code: " . $res->code . "\n";
