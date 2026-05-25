@@ -1,0 +1,62 @@
+#!/bin/perl
+
+use strict;
+use warnings;
+
+use LWP::UserAgent;
+use Data::Dumper;
+use File::Copy;
+
+sub process_file($);
+
+
+
+my $url = "http://localhost:8086/api/v2/write?org=none&bucket=mqttdata&precision=s";
+my $token = "o7RFr6VJNEcAc0TFikNs9ke9KXkXmdC3oBc6oeMYmRhsoCmnRmiWPzBf7-dBTVLS__UoIYjmNEoAsyYUSXycdw==";
+
+
+my $ua = LWP::UserAgent->new;
+$ua->agent( "shelly-mqtt-to-influxdb" );
+
+opendir DIR, "./spool"  or  die;
+
+while ( readdir DIR ) {
+    # Sample filename: data-0123456789ab-98765.1777777777
+    process_file $_  if  /^data-[a-f0-9]+-\d+.\d+$/;
+}
+
+
+sub process_file($) {
+
+    my $filename = shift;
+
+    open INFILE, "<", "./spool/$filename"  or  die;
+    my $data = <INFILE>;
+    close INFILE;
+
+    print $data;
+
+    my $req = HTTP::Request->new( POST => $url );
+    $req->content_type( 'text/plain; charset=utf-8' );
+    $req->header( Accept => "application/json",
+                  Authorization => "Token $token"
+    );
+
+    $req->content( $data );
+
+    my $res = $ua->request( $req );
+
+    if ( $res->is_success and $res->code == 204 ) {
+        # Everything is fine, status code 204 is expected
+        #print $res->content;
+        move "./spool/$filename", "./completed/."  or  die "$!";
+    }
+    else {
+        print $res->status_line, "\n";
+    }
+
+    print "Code: " . $res->code . "\n";
+
+    #print Dumper \$res;
+
+}
