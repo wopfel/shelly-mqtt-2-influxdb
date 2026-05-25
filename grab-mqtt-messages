@@ -42,6 +42,8 @@ sub received
                 print ref $json->{"params"}->{"switch:0"}->{ $_ };
                 # No reference?
                 if ( ! ref $json->{"params"}->{"switch:0"}->{ $_ } ) {
+                    #TODO: Skip 'source' => 'http'
+                    #TODO: 'output' missing
                     push @output, "$_=" . $json->{"params"}->{"switch:0"}->{$_};
                 }
             }
