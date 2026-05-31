@@ -1,0 +1,74 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Net::MQTT::Simple;
+use JSON qw( decode_json );
+use Data::Dumper;
+use Try::Tiny;
+
+# Establish connection to MQTT broker
+my $mqtt = Net::MQTT::Simple->new('mosquitto.lan:1883');
+
+# Subscribe to topics
+$mqtt->subscribe("photovoltaik/solix/site/Daheim/scenInfo", \&received);
+
+# Run loop
+$mqtt->run();
+
+# Disconnect (but when?)
+$mqtt->disconnect();
+
+# Receive message
+sub received
+{
+    my ($topic, $payload) = @_;
+
+    my $json;
+
+    # Without try/catch:
+    # malformed JSON string, neither tag, array, object, number, string or atom, at character offset 0 (before "(end of string)") at grab-mqtt-messages-solix line 27.
+    try {
+        $json = decode_json( $payload );
+    } catch {
+        warn "JSON parsing error: $_\n";
+    };
+
+    print Dumper $json;
+
+
+
+
+        my @output;
+        #push @output, "apower=" . $json->{"params"}->{"switch:0"}->{"apower"};
+	push @output, "home_load_power=" . $json->{"home_load_power"};
+	push @output, "other_loads_power=" . $json->{"other_loads_power"};
+	push @output, "micro_inverter_power=" . $json->{"solarbank_info"}->{"micro_inverter_power"};
+	push @output, "solar_power_1=" . $json->{"solarbank_info"}->{"solar_power_1"};
+	push @output, "solar_power_2=" . $json->{"solarbank_info"}->{"solar_power_2"};
+	push @output, "solar_power_3=" . $json->{"solarbank_info"}->{"solar_power_3"};
+	push @output, "solar_power_4=" . $json->{"solarbank_info"}->{"solar_power_4"};
+	push @output, "total_battery_power=" . $json->{"solarbank_info"}->{"total_battery_power"};
+	push @output, "total_charging_power=" . $json->{"solarbank_info"}->{"total_charging_power"};
+	push @output, "total_output_power=" . $json->{"solarbank_info"}->{"total_output_power"};
+	push @output, "total_photovoltaic_power=" . $json->{"solarbank_info"}->{"total_photovoltaic_power"};
+	push @output, "battery_discharge_power=" . $json->{"solarbank_info"}->{"battery_discharge_power"};
+
+
+            my $filename = "solix-data-" . int(rand(100_000)) . "." . (scalar time());
+
+            my $timestamp = time;
+            my $perfstring = join ",", @output;
+	    my $devicename="Solarbank_3_E2700_Pro";
+            my $metricstring = "devicename=$devicename";
+	    # measurement,tag-set field-set timestamp
+            my $outstring = "solix2mqtt,$metricstring $perfstring $timestamp";
+
+            print "$outstring\n";
+
+            # Write string to file
+	    open OUTFILE, ">", "./spool-solix/$filename"  or  die;
+	    print OUTFILE "$outstring\n";
+	    close OUTFILE;
+}
