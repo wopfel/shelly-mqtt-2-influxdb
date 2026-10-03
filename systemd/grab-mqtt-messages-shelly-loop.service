@@ -1,0 +1,12 @@
+[Unit]
+Description=Grab MQTT messages from Shelly devices services
+After=syslog.target network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/
+ExecStart=/bin/perl grab-mqtt-messages
+
+[Install]
+WantedBy=multi-user.target

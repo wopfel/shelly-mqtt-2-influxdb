@@ -9,3 +9,17 @@ Manually clean files: find ./completed/ -name 'data-*-*.*' -type f -mtime +3 -de
 
 
 grab-mqtt-messages-solix: not Shelly related at all. Grab data from an Anker Solix. Getting the data from the solarbank is not part of this project. Have a look at https://github.com/tomquist/solix2mqtt, or something similar.
+
+
+
+## systemd support
+
+Using these units, the messages are grabbed and stored in spool directories. 
+
+#TODO: data-from-solix-to-influxdb missing
+
+```
+# systemctl enable --now grab-mqtt-messages-shelly-loop.service
+# systemctl enable --now grab-mqtt-messages-solix-loop.service
+# systemctl enable --now data-to-influxdb.timer
+```

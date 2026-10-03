@@ -1,0 +1,6 @@
+[Unit]
+Description=Data to InfluxDB
+[Service]
+Type=oneshot
+ExecStart=perl ./data-to-influxdb
+WorkingDirectory=/root

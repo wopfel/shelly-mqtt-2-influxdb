@@ -1,0 +1,12 @@
+[Unit]
+Description=Grab MQTT messages from Anker Solix power bank devices services
+After=syslog.target network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/
+ExecStart=/bin/perl grab-mqtt-messages-solix
+
+[Install]
+WantedBy=multi-user.target
