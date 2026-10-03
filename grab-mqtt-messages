@@ -33,6 +33,7 @@ sub received
     my ($topic, $payload) = @_;
 
     if ( $topic =~ m{^(?:shelly/)?shelly(.*?)-([[:xdigit:]]{12})/events/rpc$} ) {
+
         my $shelly_model = $1;
         my $shelly_serial = $2;
 	
