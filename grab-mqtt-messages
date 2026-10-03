@@ -82,7 +82,7 @@ sub received
                 }
             }
 
-            print Dumper \@output;
+            #print Dumper \@output;
 
             # Build filename using shelly's serial number, a random number (just in case), and the current timestamp
             my $filename = "data-$shelly_serial-" . int(rand(100_000)) . "." . (scalar time());
