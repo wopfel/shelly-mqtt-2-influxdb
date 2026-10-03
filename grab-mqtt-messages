@@ -93,12 +93,22 @@ sub received
             $metricstring .= ",nickname=$nickname"  if  $nickname;
             my $outstring = "shellymqtt,$metricstring $perfstring $timestamp";
 
-            print "$outstring\n";
+            #TODO: skip files like this:
+            #shellymqtt,model=1minig3,serial=xxxxxxxxxxxx,nickname=device-1 source=button 1789068093
+            #TODO done: empty $perfstring
+            #shellymqtt,model=1minig3,serial=xxxxxxxxxxxx,nickname=device-2  1790105040
 
-            # Write string to file
-            open OUTFILE, ">", "./spool/$filename"  or  die;
-            print OUTFILE "$outstring\n";
-            close OUTFILE;
+            if ( $perfstring  and  $perfstring ne "source=button,id=0"  and  $perfstring ne "source=switch,id=0"  and  $perfstring ne "id=0" ) {
+                print "$outstring\n";
+
+                # Write string to file
+                open OUTFILE, ">", "./spool/$filename"  or  die;
+                print OUTFILE "$outstring\n";
+                close OUTFILE;
+            } else {
+                print "EMPTY SKIPPED: $outstring\n";
+            }
+
         }
 
     }
