@@ -48,12 +48,11 @@ sub received
                 print ref $json->{"params"}->{"switch:0"}->{ $_ };
                 # No reference?
                 if ( ! ref $json->{"params"}->{"switch:0"}->{ $_ } ) {
-                    #TODO done: Skip 'source' => 'http'
                     #TODO: 'output' missing
-                    # skiping this: timer_duration=,timer_started_at=,
                     my $value = $json->{"params"}->{"switch:0"}->{$_};
                     my $datastr = "$_=$value";
-                    push @output, $datastr  if  $datastr ne "source=http" and $datastr ne "source=HTTP_in" and $datastr ne "source=switch" and $value ne "" and $value =~ /^-?[.0-9]+$/;
+                    # Add data only if numeric value
+                    push @output, $datastr  if  $value =~ /^-?[.0-9]+$/;
                 }
             }
             #push @output, "apower=" . $json->{"params"}->{"switch:0"}->{"apower"};
@@ -95,7 +94,7 @@ sub received
             #TODO done: empty $perfstring
             #shellymqtt,model=1minig3,serial=xxxxxxxxxxxx,nickname=device-2  1790105040
 
-            if ( $perfstring  and  $perfstring ne "source=button,id=0"  and  $perfstring ne "source=switch,id=0"  and  $perfstring ne "id=0" ) {
+            if ( $perfstring  and  $perfstring ne "id=0" ) {
                 print "$outstring\n";
 
                 # Write string to file
