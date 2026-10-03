@@ -33,7 +33,7 @@ sub received
 
         my $shelly_model = $1;
         my $shelly_serial = $2;
-	
+
         my $nickname = $nicknames{ $shelly_serial };
 
         my $json = decode_json( $payload );
@@ -77,7 +77,7 @@ sub received
                     $arrayindex++;
                 }
             }
-
+    
             #print Dumper \@output;
 
             # Build filename using shelly's serial number, a random number (just in case), and the current timestamp
@@ -88,7 +88,7 @@ sub received
             my $metricstring = "model=$shelly_model,serial=$shelly_serial";
             $metricstring .= ",nickname=$nickname"  if  $nickname;
             my $outstring = "shellymqtt,$metricstring $perfstring $timestamp";
-
+            
             #TODO: skip files like this:
             #shellymqtt,model=1minig3,serial=xxxxxxxxxxxx,nickname=device-1 source=button 1789068093
             #TODO done: empty $perfstring
@@ -96,7 +96,7 @@ sub received
 
             if ( $perfstring  and  $perfstring ne "id=0" ) {
                 print "$outstring\n";
-
+    
                 # Write string to file
                 open OUTFILE, ">", "./spool/$filename"  or  die;
                 print OUTFILE "$outstring\n";
