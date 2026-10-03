@@ -11,9 +11,6 @@ use Data::Dumper;
 my $mqtt = Net::MQTT::Simple->new('mosquitto.lan:1883');
 
 # Subscribe to topics
-#$mqtt->subscribe("shellypro1pm-xxxxxxxxxxxx/status/#", \&received);
-$mqtt->subscribe("shellypro1pm-xxxxxxxxxxxx/#", \&received);
-$mqtt->subscribe("shellypro1pm-xxxxxxxxxxxx/#", \&received);
 $mqtt->subscribe("shelly/+/#", \&received);
 
 my %nicknames = (
