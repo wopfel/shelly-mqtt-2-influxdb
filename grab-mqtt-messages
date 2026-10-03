@@ -51,9 +51,12 @@ sub received
                 print ref $json->{"params"}->{"switch:0"}->{ $_ };
                 # No reference?
                 if ( ! ref $json->{"params"}->{"switch:0"}->{ $_ } ) {
-                    #TODO: Skip 'source' => 'http'
+                    #TODO done: Skip 'source' => 'http'
                     #TODO: 'output' missing
-                    push @output, "$_=" . $json->{"params"}->{"switch:0"}->{$_};
+                    # skiping this: timer_duration=,timer_started_at=,
+                    my $value = $json->{"params"}->{"switch:0"}->{$_};
+                    my $datastr = "$_=$value";
+                    push @output, $datastr  if  $datastr ne "source=http" and $datastr ne "source=HTTP_in" and $datastr ne "source=switch" and $value ne "" and $value =~ /^-?[.0-9]+$/;
                 }
             }
             #push @output, "apower=" . $json->{"params"}->{"switch:0"}->{"apower"};
